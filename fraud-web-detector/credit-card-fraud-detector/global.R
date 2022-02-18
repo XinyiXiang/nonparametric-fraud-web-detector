@@ -19,13 +19,13 @@ library(dashboardthemes)
 h2o.init()
 
 ## Load saved model
-model <- h2o.loadModel("/home/diwash/projeckt/credit_card_feaud/model/GBM_model_R_1558482610633_2")
+model <- h2o.loadModel("~/Documents/GitHub/STAT499/fraud-web-detector/credit-card-fraud-detector/model")
 ## Random Forest
-modelrf <- h2o.loadModel("/home/diwash/projeckt/credit_card_feaud/credit-card-fraud-detector/model/improve/DRF_model_R_1561701961587_4087")
+modelrf <- h2o.loadModel("~/Documents/GitHub/STAT499/fraud-web-detector/credit-card-fraud-detector/model/improve/DRF_model_R_1561701961587_4087")
 ## Xgboost
-modelxg <- h2o.loadModel("/home/diwash/projeckt/credit_card_feaud/credit-card-fraud-detector/model/improve/XGBoost_model_R_1561701961587_2048")
+modelxg <- h2o.loadModel("~/Documents/GitHub/STAT499/fraud-web-detector/credit-card-fraud-detector/model/improve/XGBoost_model_R_1561701961587_2048")
 ## GBM model
-modelgb <- h2o.loadModel("/home/diwash/projeckt/credit_card_feaud/credit-card-fraud-detector/model/improve/GBM_model_R_1561701961587_2817")
+modelgb <- h2o.loadModel("~/Documents/GitHub/STAT499/fraud-web-detector/credit-card-fraud-detector/model/improve/GBM_model_R_1561701961587_2817")
 
 
 ## For LIME
