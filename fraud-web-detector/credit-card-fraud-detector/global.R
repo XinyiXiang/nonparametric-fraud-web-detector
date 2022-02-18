@@ -1,3 +1,4 @@
+# Load all required libraries
 library(shinydashboard)
 library(shinythemes)
 library(shinydashboardPlus)
@@ -19,7 +20,7 @@ library(dashboardthemes)
 h2o.init()
 
 ## Load saved model
-model <- h2o.loadModel("~/Documents/GitHub/STAT499/fraud-web-detector/credit-card-fraud-detector/model")
+model <- h2o.loadModel("model/GBM_model_R_1558482610633_2")
 ## Random Forest
 modelrf <- h2o.loadModel("~/Documents/GitHub/STAT499/fraud-web-detector/credit-card-fraud-detector/model/improve/DRF_model_R_1561701961587_4087")
 ## Xgboost

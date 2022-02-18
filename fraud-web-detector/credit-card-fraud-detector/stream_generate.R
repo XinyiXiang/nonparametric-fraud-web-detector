@@ -3,10 +3,11 @@
 library(dplyr)
 library(readr)
 library(data.table)
+library(here)
 
 data <-
   read_csv(
-    "/home/diwash/projeckt/credit_card_feaud/credit-card-fraud-detector/data/test_data.csv"
+    "~/Documents/GitHub/STAT499/fraud-web-detector/credit-card-fraud-detector/data/data.csv"
   )
 
 #i = 0.05

@@ -1,8 +1,8 @@
 
-# Define UI for application that draws a histogram
+# Define UI for application that renders a dashboard
 
 header <- dashboardHeader(
-  title = "ABC Bank"
+  title = "Fraudulent Website Detection"
 )
 
 
