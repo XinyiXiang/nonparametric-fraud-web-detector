@@ -1,9 +1,9 @@
 ##############################################################
 #randomForest library
 
-library(farff) #read data files
-library(randomForest) #randomForest function
-library(caret) #confusionMatrix function
+library(farff) #Read .arff data
+library(randomForest) #Random Forest function
+library(caret) # Confusion Matrix function
 
 setwd("~/Desktop/UW/DRP")
 
@@ -13,7 +13,7 @@ old <- readARFF("old.arff")
 training <- readARFF("TrainingDataset.arff")
 
 #split training into train and test set
-set.seed(12345)
+set.seed(122)
 ind <- sample(2, nrow(training), replace = TRUE, prob = c(0.7, 0.3))
 train <- training[ind==1,]
 test <- training[ind==2,]
