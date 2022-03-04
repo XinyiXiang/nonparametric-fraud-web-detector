@@ -7,11 +7,11 @@ ui <- dashboardPage(skin = "purple",
                                notificationItem(
                                  text = "Phishing possibility exceeds 86%",
                                  icon = icon("exclamation-triangle"),
-                                 status = "warning"
+                                 status = "danger"
                                )
                   ),
                   
-                  dropdownMenu(type = "tasks", badgeStatus = "success",
+                  dropdownMenu(type = "tasks", badgeStatus = "warning",
                              taskItem(value = 17, color = "aqua",
                                       "Random Forest"),
                              taskItem(value = 65, color = "yellow",
@@ -32,26 +32,30 @@ ui <- dashboardPage(skin = "purple",
   
   dashboardBody(
     
-    # Boxes need to be put in a row (or column)
     fluidRow(
-      box(plotOutput("plot", height = 250)),
-      
-      box(
-        title = "Controls",
-        sliderInput("slider", "Number of observations:", 1, 100, 50)
-      )
+      infoBoxOutput("averageBox"),
+      infoBoxOutput("approvalBox")
     )
-    
     
   )
 )
 
 server <- function(input, output) {
-  histdata <- rnorm(500)
   
-  output$plot <- renderPlot({
-    data <- histdata[seq_len(input$slider)]
-    hist(data)
+  output$averageBox <- renderInfoBox({
+    infoBox("Non-phishing Confirmed", "80%", 
+            icon = icon("thumbs-up", 
+                        lib = "glyphicon"),
+            color = "yellow"
+    )
+  })
+  
+  output$approvalBox <- renderInfoBox({
+    infoBox("Progress", 
+            paste0(25 + input$count, "%"), 
+            icon = icon("list"),
+            color = "purple"
+    )
   })
 }
 

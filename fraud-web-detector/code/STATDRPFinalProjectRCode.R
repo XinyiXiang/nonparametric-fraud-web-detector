@@ -85,3 +85,4 @@ bst <- xgb.train(data=dtrain,max.depth=1,eta=1,
                  nthread = 2, nrounds=1, watchlist=watchlist, 
                  objective = "binary:logistic",
                  eval_metric = "error")
+
