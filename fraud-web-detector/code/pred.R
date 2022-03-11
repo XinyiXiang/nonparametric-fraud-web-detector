@@ -1,11 +1,22 @@
 ##############################################################
 #randomForest library
+set.seed(499)
+pkgs <- c("farff", "randomForest", "caret")
+#Read .arff data
+#Random Forest function
+# Confusion Matrix function
 
-library(farff) #Read .arff data
-library(randomForest) #Random Forest function
-library(caret) # Confusion Matrix function
+for(pkg in pkgs){
+  if(!(pkg %in% rownames(installed.packages()))){
+    install.packages(pkg, dependencies = TRUE)
+  }
+  lapply(pkg, FUN = function(X){
+    do.call("require", list(X))
+  })
+}
 
-setwd("~/Desktop/UW/DRP")
+
+setwd("~/Documents/GitHub/STAT499/fraud-web-detector/code")
 
 #different levels causes an issue here,
 #stick with just training and break it into halves
