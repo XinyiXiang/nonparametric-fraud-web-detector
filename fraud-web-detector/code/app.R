@@ -1,5 +1,15 @@
-library(shiny)
-library(shinydashboard)
+#---------------Loading the packages------------------------------------
+set.seed(499)
+pkgs <- c("shiny", "shinydashboard")
+
+for(pkg in pkgs){
+  if(!(pkg %in% rownames(installed.packages()))){
+    install.packages(pkg, dependencies = TRUE)
+  }
+  lapply(pkg, FUN = function(X){
+    do.call("require", list(X))
+  })
+}
 
 ui <- dashboardPage(skin = "purple",
   dashboardHeader(title = "Phishing Detection",
