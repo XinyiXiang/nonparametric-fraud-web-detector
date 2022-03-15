@@ -1,7 +1,7 @@
 ##############################################################
 #randomForest library
 set.seed(499)
-pkgs <- c("farff", "randomForest", "caret")
+pkgs <- c("farff", "randomForest", "caret", "ggplot2")
 #Read .arff data
 #Random Forest function
 # Confusion Matrix function
@@ -38,9 +38,9 @@ test <- training[ind==2,]
 rf1 <- randomForest(Result~.,data=train)
 
 #get a sense of the most important predictors
-varImpPlot(rf1,
+vip <- varImpPlot(rf1,
            sort = T,
-           n.var = 10)
+           n.var = 10) + title("Var Importance in  ")
 
 #only the 5 most important predictors
 rf2 <- randomForest(Result~SSLfinal_State
@@ -75,8 +75,10 @@ confusionMatrix(test.error2,test$Result)
 #xgboost library
 
 #https://xgboost.readthedocs.io/en/stable/R-package/xgboostPresentation.html
-
+install.packages("xgboost")
+install.packages("DiagrammeR")
 library(xgboost)
+library(DiagrammeR)
 
 #to work with binary classification
 levels(train$Result) <- c("0","1")
@@ -92,8 +94,14 @@ watchlist <- list(train=dtrain,
 
 #train error: 0
 #test error: -0.44 (?)
-bst <- xgb.train(data=dtrain,max.depth=1,eta=1,
-                 nthread = 2, nrounds=1, watchlist=watchlist, 
-                 objective = "binary:logistic",
-                 eval_metric = "error")
+bst1 <- xgboosst(data=dtrain,max.depth=2,eta=1,
+                 nthread=2, nrounds=2, watchlist=watchlist, 
+                objective="binary:logistic",                 
+                 eval_metric="error")
+# Error evaluation
+xgb_tree <- xgb.plot.tree(model=bst1)
+xgb_deepness <- xgb.plot.deepness(model=bst1, trees=1:3)
 
+
+pred <- predict(bst, data.matrix(test$data))
+error <- mean(as.numeric(pred>0.5)!=data.matrix(test$label))

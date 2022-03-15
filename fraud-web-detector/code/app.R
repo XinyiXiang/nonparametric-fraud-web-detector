@@ -18,6 +18,7 @@ library(randomForest)
 library(caret)
 library(plotly)
 library(shinycssloaders)
+library(ggplot2)
 
 ui <- dashboardPage(
   skin = "purple",
@@ -57,7 +58,7 @@ ui <- dashboardPage(
             infoBoxOutput("approvalBox")
           ),
           box(width = 12, 
-              title = "variable importance plot",
+              title = "Mean Decrease Gini vs. Variables in UCI Phishing Dataset",
               withSpinner(plotOutput("var_imp_plot")
               )
           )
@@ -87,32 +88,20 @@ server <- function(input, output) {
   
   output$approvalBox <- renderInfoBox({
     infoBox("Progress", 
-            paste0(25 + input$count, "%"), 
-            icon = icon("list"),
+            paste0(25, "%"), 
+            icon = icon("bars-progress", class=NULL, lib="font-awesome"),
             color = "purple"
     )
   })
   
+  # Generate varImpPlot from pred.R
+  source("pred.R", local=TRUE)
+  
   # Variable importance plot
-  output$var_imp_plot <- renderPlotly({
-    # var_imp <- h2o.varimp(h2o_df$model)
-    # var_imp <- var_imp[order(var_imp$scaled_importance),]
-    # var_order <- var_imp$variable
-    # var_imp$variable <- factor(var_imp$variable, levels = var_order)
-    old <- readARFF("old.arff")
-    training <- readARFF("TrainingDataset.arff")
-    set.seed(122)
-    ind <- sample(2, nrow(training), replace = TRUE, prob = c(0.7, 0.3))
-    train <- training[ind==1,]
-    test <- training[ind==2,]
-    rf1 <- randomForest(Result~.,data=train)
-    var_imp <- varImpPlot(rf1,
+  output$var_imp_plot <- renderPlot({
+    varImpPlot(rf1,
                sort = T,
                n.var = 10)
-    
-    plotOutput(varImpPlot(rf1,
-                          sort = T,
-                          n.var = 10)) 
   })
   } 
 
