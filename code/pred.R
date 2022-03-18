@@ -12,7 +12,7 @@ for(pkg in pkgs){
   })
 }
 
-setwd("~/Documents/GitHub/STAT499/fraud-web-detector/code")
+setwd("~/Documents/GitHub/STAT499/code")
 
 # Different levels causes an issue 
 # stick with just training and break it into halves
