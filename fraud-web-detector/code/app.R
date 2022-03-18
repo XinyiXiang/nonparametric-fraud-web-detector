@@ -45,7 +45,7 @@ ui <- dashboardPage(
   dashboardSidebar(
     sidebarMenu(
       menuItem("Random Forest", tabName = "rf", icon = icon("th")),
-      menuItem("XG Boost", tabName = "xg", icon = icon("th")),
+      menuItem("XG Boost", tabName = "xgb", icon = icon("th")),
       menuItem("SVM", tabName = "svm", icon = icon("th"))
     )
   ),
@@ -65,13 +65,20 @@ ui <- dashboardPage(
         )
       ),
       
-      tabItem(tabName = "xg",
-        h2("XG boost content")
+      tabItem(tabName = "xgb",
+        fluidPage(
+          box(
+            width = 12,
+            title = "XGB Model Variable Importance Heatmap Normalized Scores",
+            withSpinner(plotOutput("xgb_var_imp_map"))
+          )
+        )
       ),
       
       tabItem(tabName = "svm",
         h2("Support vector machine content")
       )
+      
     )
   )
 )
@@ -103,7 +110,18 @@ server <- function(input, output) {
                sort = T,
                n.var = 10)
   })
-  } 
+  
+  output$xgb_var_imp_map <- renderPlot({
+    heatmap(xgboostModel)
+  })
+  
+  output$svm_plot <- renderPlot({
+    
+  })
+}
+
+
+
 
 
 shinyApp(ui, server)

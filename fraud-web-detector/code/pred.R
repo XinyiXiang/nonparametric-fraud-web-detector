@@ -1,10 +1,7 @@
 ##############################################################
-#randomForest library
+# Load packages and set preliminary directory
 set.seed(499)
 pkgs <- c("farff", "randomForest", "caret", "ggplot2")
-#Read .arff data
-#Random Forest function
-# Confusion Matrix function
 
 for(pkg in pkgs){
   if(!(pkg %in% rownames(installed.packages()))){
@@ -15,34 +12,30 @@ for(pkg in pkgs){
   })
 }
 
-
 setwd("~/Documents/GitHub/STAT499/fraud-web-detector/code")
 
-#different levels causes an issue here,
-#stick with just training and break it into halves
-old <- readARFF("old.arff")
-training <- readARFF("TrainingDataset.arff")
+# Different levels causes an issue 
+# stick with just training and break it into halves
+old <- readARFF("../data/old.arff")
+data <- readARFF("../data/TrainingDataset.arff")
 
-#split training into train and test set
-set.seed(122)
-ind <- sample(2, nrow(training), replace = TRUE, prob = c(0.7, 0.3))
-train <- training[ind==1,]
-test <- training[ind==2,]
-
-#https://www.r-bloggers.com/2021/04/random-forest-in-r/
+# Split training into train and test set
+ind <- sample(2, nrow(data), replace = TRUE, prob = c(0.7, 0.3))
+train <- data[ind==1,]
+test <- data[ind==2,]
 
 #############################################
 #Fit Models
 
-#use every predictor
+# Use every predictor
 rf1 <- randomForest(Result~.,data=train)
 
-#get a sense of the most important predictors
+# Get a sense of the most important predictors
 vip <- varImpPlot(rf1,
            sort = T,
            n.var = 10) + title("Var Importance in  ")
 
-#only the 5 most important predictors
+# Only the 5 most important predictors
 rf2 <- randomForest(Result~SSLfinal_State
                     + URL_of_Anchor
                     + web_traffic
@@ -72,36 +65,61 @@ test.error2 <- predict(rf2,test)
 confusionMatrix(test.error2,test$Result)
 
 ##############################################################
-#xgboost library
-
-#https://xgboost.readthedocs.io/en/stable/R-package/xgboostPresentation.html
+# XGBoost ref: https://xgboost.readthedocs.io/en/stable/R-package/xgboostPresentation.html
 install.packages("xgboost")
 install.packages("DiagrammeR")
 library(xgboost)
 library(DiagrammeR)
 
-#to work with binary classification
+# Work with binary classification
 levels(train$Result) <- c("0","1")
-
-
 dtrain <- xgb.DMatrix(data = data.matrix(train),
                       label=data.matrix(train$Result))
 dtest <- xgb.DMatrix(data = data.matrix(test),
                      label=data.matrix(test$Result))
-
 watchlist <- list(train=dtrain,
                   test=dtest)
-
-#train error: 0
-#test error: -0.44 (?)
-bst1 <- xgboosst(data=dtrain,max.depth=2,eta=1,
+bst1 <- xgb.train(data=dtrain,max.depth=2,eta=1,
                  nthread=2, nrounds=2, watchlist=watchlist, 
-                objective="binary:logistic",                 
+                 objective="binary:logistic",                 
                  eval_metric="error")
-# Error evaluation
+# Built-in analyses
 xgb_tree <- xgb.plot.tree(model=bst1)
 xgb_deepness <- xgb.plot.deepness(model=bst1, trees=1:3)
-
-
-pred <- predict(bst, data.matrix(test$data))
+pred <- predict(bst1, data.matrix(test$data))
 error <- mean(as.numeric(pred>0.5)!=data.matrix(test$label))
+
+# XGB model prepared for dashboard plot 
+xgboostModel <- h2o.xgboost(y = "Result",
+                            training_frame = as.h2o(training),
+                            booster = "dart",
+                            normalize_type = "tree",
+                            seed = 1234)
+
+##############################################################
+# Supervised Linear Model - SVM
+install.packages("h2o")
+library(h2o)
+h2o.init()
+
+svm <- h2o.psvm(
+ gamma = 0.01,
+ rank_ratio = 0.1,
+ y = "Result",
+ training_frame = as.h2o(train),
+ disable_training_metrics = FALSE
+)
+
+perf <- h2o.performance(svm)
+
+install.packages('e1071')
+library(e1071)
+training$Result = factor(training$Result, levels = c(0, 1))
+
+classifier <- svm(formula = Result ~.,
+                 data = train,
+                 type = 'C-classification',
+                 kernel = 'linear')
+plot(classifier,data=train,formula = Result ~.,)
+perf <- h2o.performance(svm)
+
