@@ -63,7 +63,6 @@ ind <- sample(2, nrow(data), replace = TRUE, prob = c(0.7, 0.3))
 train <- data[ind==1,]
 test <- data[ind==2,]
 
-#############################################
 #Fit Models
 
 # Use every predictor
