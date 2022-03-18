@@ -149,3 +149,5 @@ perf <- h2o.performance(svm)
 | Detection Prevalence   | 0.4650           |
 | Balanced Accuracy      | 0.9255           |
 | 'Positive' Class       | -1               |
+
+![alt text](https://github.com/XinyiXiang/nonparametric-fraud-web-detector/blob/986394a8fede91da5849f356538aa8e0001ea1a5/img/xgbTree.png)
