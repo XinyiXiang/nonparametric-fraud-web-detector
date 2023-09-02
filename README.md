@@ -9,7 +9,7 @@
 - [Slides](https://spa-drp.github.io/writeups/win2022/slides/vicky.pdf)
 
 
-Paricipating Project in Winter 2022 University of Washington Directed Reading Program. This project’s primary goal is to demonstrate a data science project’s deployment into fraud precention using open source and free tools such as R, h2o, Caret, and others. That includes the following components:
+Paricipating Project in Winter 2022 University of Washington Directed Reading Program. This project’s primary goal is to demonstrate a data science project’s deployment into fraud prediction using open source and free tools such as R, h2o, Caret, and others. That includes the following components:
 
 
 # Dataset
